@@ -1,5 +1,5 @@
 const fs=require('fs'),vm=require('vm'),assert=require('assert');
-const file=process.argv[2]||'work/topic-workflow/project/选题灵感库.html';
+const file=process.argv[2]||'index.html';
 const src=fs.readFileSync(file,'utf8').match(/<script>([\s\S]*?)<\/script>/)[1];
 const backing=new Map();
 function boot(){
