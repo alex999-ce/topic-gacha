@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>选题灵感库 · 人群×场景×角度抽卡</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23121212'/%3E%3Ccircle cx='32' cy='32' r='14' fill='%23E8502C'/%3E%3Cpath d='M32 22v20M22 32l10 10 10-10' stroke='%23F5F3EC' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<style>
+/* ============================================================
+   选题灵感库 · 视觉系统
+   纸感灰白背景 / 粗黑标题 / 黑色抽卡区 / 橙红圆形再抽按钮
+   ============================================================ */
+:root{
+  --paper:#ECEAE3;          /* 纸感背景 */
+  --paper-deep:#E2DFD6;     /* 深一档纸色 */
+  --ink:#111111;            /* 纯黑墨色 */
+  --ink-soft:#2A2A2A;
+  --paper-text:#3A382F;     /* 纸上文字 */
+  --paper-mut:#8A867A;      /* 纸上弱文字 */
+  --line:#D4D0C4;           /* 纸面细线 */
+  --card:#171717;           /* 抽卡区黑色 */
+  --card-2:#202020;
+  --orange:#E8502C;         /* 橙红强调，全页唯一高饱和 */
+  --orange-deep:#C93E1E;
+  --white:#F5F3EC;
+  --tag:#E7E4DA;
+  --font:"PingFang SC","Hiragino Sans GB","Source Han Sans SC","Microsoft YaHei",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font);
+  color:var(--ink);
+  background:var(--paper);
+  background-image:
+    radial-gradient(rgba(20,18,12,.045) 1px, transparent 1.4px),
+    radial-gradient(rgba(20,18,12,.035) 1px, transparent 1.6px);
+  background-size:26px 26px, 11px 11px;
+  background-position:0 0, 7px 9px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+/* ---- 头部 ---- */
+header{padding:44px 0 10px}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:700;letter-spacing:.18em;color:var(--paper-mut);
+  border:1px solid var(--line);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.4);
+}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}
+h1{
+  font-size:clamp(44px,7.5vw,76px);
+  font-weight:900;letter-spacing:.02em;line-height:1.08;
+  margin:16px 0 10px;color:var(--ink);
+  text-shadow:3px 3px 0 var(--line);
+}
+.sub{font-size:15px;color:var(--paper-text);max-width:46em}
+.sub b{color:var(--orange)}
+
+/* ---- 计数条 ---- */
+.stats{
+  display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 26px;
+}
+.stat{
+  border:1.5px solid var(--ink);background:#fff;padding:8px 16px;border-radius:12px;
+  display:flex;align-items:baseline;gap:8px;box-shadow:2px 2px 0 var(--ink);
+}
+.stat .num{font-size:24px;font-weight:900;line-height:1}
+.stat .lbl{font-size:12px;color:var(--paper-mut);font-weight:700;letter-spacing:.06em}
+.stat .badge{font-size:11px;font-weight:700;color:var(--orange);border:1px solid var(--orange);border-radius:999px;padding:1px 8px;line-height:1.5}
+
+/* ---- 抽卡区 ---- */
+.draw-zone{
+  background:var(--ink);color:var(--white);
+  border-radius:22px;padding:30px 28px 24px;position:relative;overflow:hidden;
+  box-shadow:0 22px 40px rgba(17,17,17,.22);
+}
+.draw-zone::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(rgba(255,255,255,.05) 1px,transparent 1.4px);
+  background-size:18px 18px;
+}
+.draw-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.draw-no{
+  font-size:13px;font-weight:800;letter-spacing:.14em;color:#9A9A9A;
+  border:1px solid #3A3A3A;border-radius:8px;padding:5px 12px;
+}
+.draw-hint{font-size:13px;color:#9A9A9A;font-weight:600}
+.draw-hint kbd{
+  background:#2C2C2C;color:var(--white);border:1px solid #444;border-radius:6px;
+  padding:2px 9px;font-family:var(--font);font-size:12px;font-weight:800;
+}
+#draw-card{
+  min-height:190px;display:flex;flex-direction:column;justify-content:center;gap:18px;
+  position:relative;
+}
+#draw-text{
+  font-size:clamp(24px,3.6vw,34px);font-weight:900;line-height:1.35;letter-spacing:.01em;
+  transition:opacity .12s ease;
+}
+#draw-text.dim{opacity:.12;transform:scale(.985)}
+#draw-factors{display:flex;gap:10px;flex-wrap:wrap}
+.factor{
+  font-size:13px;font-weight:700;color:var(--white);
+  border:1px solid #484848;border-radius:999px;padding:6px 14px;background:#242424;
+}
+.factor b{color:var(--orange);margin-right:8px;font-weight:900}
+
+/* ---- 操作行 ---- */
+.actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:24px}
+#redraw{
+  width:92px;height:92px;border-radius:50%;border:none;cursor:pointer;
+  background:var(--orange);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 20px rgba(232,80,44,.45), 0 0 0 5px var(--paper), 0 0 0 6px var(--orange);
+  transition:transform .18s cubic-bezier(.2,.8,.3,1.4), background .2s;
+  position:relative;flex-shrink:0;
+}
+#redraw:hover{background:var(--orange-deep);transform:scale(1.05)}
+#redraw:active{transform:scale(.92)}
+#redraw.spin svg{animation:spin .5s ease-out}
+#redraw{gap:6px}
+#redraw #redraw-label{font-size:25px;font-weight:900;letter-spacing:.05em;line-height:1}
+#redraw svg{width:22px;height:22px}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.draw-actions{display:flex;flex-direction:column;gap:14px;align-items:flex-start}
+.save-btn{
+  display:inline-flex;align-items:center;gap:9px;cursor:pointer;
+  background:transparent;border:2px solid #fff;border-radius:14px;
+  padding:12px 20px;font-size:15px;font-weight:800;color:#fff;
+  transition:transform .15s,background .2s,border-color .2s;
+}
+.save-btn:hover{background:var(--white);color:var(--ink)}
+.save-btn:hover svg{stroke:var(--ink)}
+.save-btn.saved{background:var(--orange);border-color:var(--orange);color:#fff}
+.save-btn.saved:hover{background:var(--orange-deep);color:#fff}
+.save-btn.saved:hover svg{stroke:#fff}
+.save-btn:active{transform:translateY(2px)}
+.save-btn svg{width:18px;height:18px}
+.space-hint{font-size:13px;color:var(--paper-mut);font-weight:600}
+
+/* ---- 分类筛选 ---- */
+.section-title{
+  display:flex;align-items:baseline;gap:14px;margin:46px 0 18px;
+}
+.section-title h2{font-size:26px;font-weight:900;letter-spacing:.02em}
+.section-title span{font-size:13px;color:var(--paper-mut);font-weight:600}
+.filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+.filter{
+  cursor:pointer;border:1.5px solid var(--ink);border-radius:999px;
+  background:#fff;color:var(--ink);font-size:14px;font-weight:700;
+  padding:9px 20px;transition:all .18s;font-family:var(--font);
+}
+.filter:hover{transform:translateY(-2px);box-shadow:2px 2px 0 var(--ink)}
+.filter.on{background:var(--ink);color:var(--white)}
+.filter .cnt{opacity:.55;margin-left:6px;font-weight:800}
+
+/* ---- 卡片墙 ---- */
+.wall-note{
+  display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+  color:var(--orange);border:1px solid var(--orange);border-radius:999px;padding:4px 12px;margin-bottom:16px;
+}
+.wall-note svg{width:14px;height:14px}
+.wall{
+  display:grid;grid-template-columns:1fr;gap:16px;
+}
+.card{
+  background:#fff;border:1.5px solid var(--ink);border-radius:16px;padding:20px;
+  box-shadow:4px 4px 0 var(--ink);display:flex;flex-direction:column;gap:12px;
+  transition:transform .18s;
+}
+.card:hover{transform:translateY(-3px)}
+.card .tag-row{display:flex;gap:8px;flex-wrap:wrap}
+.card .cat{
+  font-size:12px;font-weight:800;color:var(--white);background:var(--ink);
+  border-radius:6px;padding:3px 10px;letter-spacing:.04em;
+}
+.card .demo{
+  font-size:11px;font-weight:700;color:var(--orange);border:1px solid var(--orange);
+  border-radius:6px;padding:2px 8px;display:inline-flex;align-items:center;gap:5px;
+}
+.card .user{
+  font-size:11px;font-weight:700;color:#fff;background:#1E7A46;
+  border-radius:6px;padding:2px 9px;display:inline-flex;align-items:center;gap:5px;
+}
+.card .idea{
+  font-size:11px;font-weight:700;color:#fff;background:#2F54EB;
+  border-radius:6px;padding:2px 9px;display:inline-flex;align-items:center;gap:5px;
+}
+.card h3{font-size:17px;font-weight:900;line-height:1.4}
+.card .meta{font-size:12px;color:var(--paper-mut);font-weight:600}
+.card .link-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:auto;
+  border:1.5px solid var(--ink);border-radius:10px;background:var(--paper);
+  padding:10px 14px;font-size:13px;font-weight:800;color:var(--ink);text-decoration:none;
+  width:fit-content;transition:all .18s;
+}
+.card .link-btn:hover{background:var(--ink);color:var(--white)}
+.card .link-btn svg{width:15px;height:15px}
+.unfav-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:auto;
+  border:1.5px solid var(--ink);border-radius:10px;background:#fff;
+  padding:10px 14px;font-size:13px;font-weight:800;color:var(--ink);cursor:pointer;
+  width:fit-content;transition:all .18s;font-family:var(--font);
+}
+.unfav-btn:hover{background:var(--ink);color:var(--white)}
+
+/* ---- 录入区 ---- */
+.add-zone{
+  margin-top:52px;border:2px dashed var(--ink);border-radius:20px;
+  background:rgba(255,255,255,.45);padding:26px 24px;
+}
+.add-zone h2{font-size:22px;font-weight:900;margin-bottom:6px}
+.add-zone .p{font-size:13px;color:var(--paper-text);margin-bottom:18px}
+.add-form{display:grid;grid-template-columns:1fr;gap:14px}
+.add-form label{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:6px;color:var(--paper-text)}
+.add-form input,.add-form select{
+  font-family:var(--font);font-size:16px;padding:12px 14px;border:1.5px solid var(--ink);
+  border-radius:10px;background:#fff;color:var(--ink);width:100%;
+}
+.add-form input:focus,.add-form select:focus{outline:none;box-shadow:0 0 0 3px rgba(232,80,44,.35)}
+.add-btn{
+  font-family:var(--font);font-size:16px;font-weight:800;color:#fff;background:var(--orange);
+  border:none;border-radius:12px;padding:14px 22px;cursor:pointer;width:100%;
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  transition:background .2s,transform .15s;
+}
+.add-btn:hover{background:var(--orange-deep)}
+.add-btn:active{transform:translateY(2px)}
+.add-btn svg{width:18px;height:18px}
+.add-note{font-size:12px;color:var(--paper-mut);margin-top:12px;font-weight:600}
+
+/* ---- 页脚诚实标注 ---- */
+footer{margin-top:56px;padding:22px 0 40px;border-top:1.5px solid var(--ink)}
+footer .honesty{font-size:12.5px;color:var(--paper-mut);line-height:1.8;max-width:60em}
+footer .honesty b{color:var(--ink)}
+
+/* ---- toast ---- */
+#toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,20px);
+  background:var(--ink);color:var(--white);font-size:14px;font-weight:700;
+  border-radius:12px;padding:14px 22px;opacity:0;pointer-events:none;
+  transition:all .3s;z-index:99;max-width:86vw;box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* ---- 响应式 ---- */
+@media (min-width:560px){
+  .wall{grid-template-columns:repeat(2,1fr)}
+  .add-form{grid-template-columns:1fr 1.6fr 1fr auto}
+  .add-btn{width:auto}
+}
+@media (min-width:920px){
+  .wall{grid-template-columns:repeat(3,1fr)}
+  #draw-card{min-height:210px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 视图：头部 ===== -->
+  <header>
+    <span class="eyebrow"><span class="dot"></span>AI 工具实操自媒体 · 每日选题工具</span>
+    <h1>选题灵感库</h1>
+    <p class="sub">人群 × 场景 × 角度，三个变量随机相撞，<b>得到一张能直接动笔的选题</b>。抽卡结果是词库组合灵感；真实对标请用下方录入框保存，展示在"已录入"卡片。</p>
+  </header>
+
+  <!-- ===== 视图：计数条 ===== -->
+  <section class="stats" aria-label="词库统计">
+    <div class="stat"><span class="num" id="st-combo">0</span><span class="lbl">种组合</span></div>
+    <div class="stat"><span class="num" id="st-cat">0</span><span class="lbl">个分类</span></div>
+    <div class="stat"><span class="num" id="st-entry">0</span><span class="lbl">词库条目</span></div>
+    <div class="stat"><span class="num" id="st-wall">0</span><span class="lbl">卡片墙</span><span class="badge">示例</span></div>
+  </section>
+
+  <!-- ===== 视图：抽卡区 ===== -->
+  <section class="draw-zone" aria-label="选题抽卡区">
+    <div class="draw-top">
+      <div class="draw-no">第 <span id="draw-count">0</span> 抽</div>
+      <div class="draw-hint">按 <kbd>空格</kbd> 键也能抽</div>
+    </div>
+    <div id="draw-card" aria-live="polite">
+      <div id="draw-text">给零基础小白，写一篇关于用 AI 写文档的避坑清单</div>
+      <div id="draw-factors">
+        <span class="factor"><b>人群</b>零基础小白</span>
+        <span class="factor"><b>场景</b>用 AI 写文档</span>
+        <span class="factor"><b>角度</b>避坑清单</span>
+      </div>
+    </div>
+    <div class="actions">
+      <button id="redraw" title="再抽一张" aria-label="再抽一张">
+        <span id="redraw-label">再抽</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v6h-6"/></svg>
+      </button>
+      <div class="draw-actions">
+        <button class="save-btn" id="save-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9z"/></svg>
+          收藏这签
+        </button>
+        <span class="space-hint">抽到喜欢的先收藏，卡片墙会帮你攒起来</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 视图：卡片墙 ===== -->
+  <section aria-label="卡片墙">
+    <div class="section-title">
+      <h2>卡片墙</h2>
+      <span id="wall-count">0 / 0 张</span>
+    </div>
+    <div class="wall-note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l2.5 2.5"/></svg>
+      卡片墙三类内容：示例（演示用）· 已录入（你保存的真实对标链接）· 词库灵感（你收藏的抽卡选题，暂无真实对标链接）
+    </div>
+    <div class="filters" id="filters" role="tablist" aria-label="分类筛选"></div>
+    <div class="wall" id="wall"></div>
+  </section>
+
+  <!-- ===== 视图：对标录入区 ===== -->
+  <section class="add-zone" aria-label="对标链接录入">
+    <h2>录入真实对标链接</h2>
+    <p class="p">把你在小红书 / 抖音看到、确认值得学的笔记标题和链接存进来，保存后出现在卡片墙的"已录入"卡片，从卡片可直接点开链接。抽卡与录入是两类独立内容，不会自动关联。数据只保存在本机浏览器，刷新页面不会丢。</p>
+    <div class="add-form">
+      <label>标题
+        <input type="text" id="in-title" placeholder="例如：给大学生讲透用 AI 做 PPT" autocomplete="off">
+      </label>
+      <label>链接
+        <input type="url" id="in-url" placeholder="https://www.xiaohongshu.com/explore" autocomplete="off">
+      </label>
+      <label>分类
+        <select id="in-cat">
+          <option value="职场">职场</option>
+          <option value="生活">生活</option>
+          <option value="成长">成长</option>
+          <option value="消费">消费</option>
+        </select>
+      </label>
+      <button class="add-btn" id="add-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+        保存到卡片墙
+      </button>
+    </div>
+    <p class="add-note">已接通本机保存：录入后立即出现在卡片墙并标"已录入"，刷新页面仍在；只接受 http/https 链接；输入内容会按纯文本处理，不会被当作代码执行。</p>
+  </section>
+
+  <!-- ===== 视图：页脚诚实标注 ===== -->
+  <footer>
+    <p class="honesty">
+      <b>数据说明：</b>页面中的选题由本地词库按“人群 × 场景 × 角度”规则随机组合生成，<b>未调用任何 AI 模型</b>；
+      词库为<b>示例数据</b>；卡片墙包含示例卡片、你<b>本机录入的真实对标链接</b>和你<b>收藏的词库组合灵感</b>（灵感暂无真实对标链接；均仅保存在当前浏览器，不上传、不联网）；
+      自动抓取小红书内容为<b>尚未接通的增强项</b>，接通前不展示任何模拟数据。
+    </p>
+  </footer>
+</div>
+
+<div id="toast" role="status"></div>
+
+<script>
+/* ============================================================
+   选题灵感库 · 数据与逻辑
+   组合由词库规则生成，非 AI 调用；示例数据明确标注
+   ============================================================ */
+
+// ---- 词库（示例数据，第二阶段可按你的真实情况替换） ----
+var POOL = {
+  audience: ["零基础小白","职场打工人","大学生","自由职业者","宝妈","小老板"],
+  scene: ["用 AI 写文档","AI 做图","AI 做视频","AI 做表格","AI 做 PPT","AI 写代码","AI 学英语","AI 整理资料"],
+  angle: ["避坑清单","保姆级教程","免费平替","效率对比","翻车实测","进阶技巧","误区纠正","省钱攻略"]
+};
+
+// 分类（示例）
+var CATS = ["职场","生活","成长","消费"];
+
+// 示例卡片：链接为平台真实首页，不指向任何具体笔记（避免编造对标内容）
+var DEMO_CARDS = [
+  {title:"给职场打工人：用 AI 做 PPT 的 5 个避坑点", cat:"职场", factors:["职场打工人","AI 做 PPT","避坑清单"], url:"https://www.xiaohongshu.com/explore"},
+  {title:"大学生用 AI 学英语一个月，效率翻倍的路线", cat:"成长", factors:["大学生","AI 学英语","效率对比"], url:"https://www.xiaohongshu.com/explore"},
+  {title:"自由职业者靠 AI 做图接单，省下外包钱的实操", cat:"消费", factors:["自由职业者","AI 做图","省钱攻略"], url:"https://www.douyin.com/"},
+  {title:"宝妈用 AI 整理资料，翻车后总结的 3 个误区", cat:"生活", factors:["宝妈","AI 整理资料","误区纠正"], url:"https://www.douyin.com/"},
+  {title:"零基础小白用 AI 写代码：从害怕到能跑的实测", cat:"成长", factors:["零基础小白","AI 写代码","翻车实测"], url:"https://www.xiaohongshu.com/explore"},
+  {title:"小老板用 AI 做视频引流，免费平替剪辑课", cat:"消费", factors:["小老板","AI 做视频","免费平替"], url:"https://www.douyin.com/"},
+  {title:"职场打工人 AI 做表格，省出每周两小时", cat:"职场", factors:["职场打工人","AI 做表格","进阶技巧"], url:"https://www.xiaohongshu.com/explore"},
+  {title:"宝妈给 AI 学英语的孩子做规划：保姆级教程", cat:"生活", factors:["宝妈","AI 学英语","保姆级教程"], url:"https://www.douyin.com/"}
+];
+
+// ---- 用户录入：本机保存（localStorage），真实数据 ----
+var STORE_KEY = "topic-gacha.links.v1";
+function loadSaved(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }catch(e){ return []; }
+}
+function saveAll(){ localStorage.setItem(STORE_KEY, JSON.stringify(USER_CARDS)); }
+var escMap = {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"};
+function esc(s){ return String(s).replace(/[&<>"']/g, function(c){ return escMap[c]; }); }
+var USER_CARDS = loadSaved();
+
+// ---- 收藏的词库灵感：本机保存（localStorage） ----
+var IDEAS_KEY = "topic-gacha.ideas.v1";
+function loadIdeas(){
+  try{ return JSON.parse(localStorage.getItem(IDEAS_KEY)) || []; }catch(e){ return []; }
+}
+function saveIdeas(){ localStorage.setItem(IDEAS_KEY, JSON.stringify(SAVED_IDEAS)); }
+var SAVED_IDEAS = loadIdeas();
+
+// ---- 状态 ----
+var state = {
+  drawNo: 0,
+  combo: POOL.audience.length * POOL.scene.length * POOL.angle.length,
+  current: {text:"给零基础小白，写一篇关于用 AI 写文档的避坑清单", factors:[["人群","零基础小白"],["场景","用 AI 写文档"],["角度","避坑清单"]]},
+  filter: "全部"
+};
+
+function fmt(n){ return String(n).padStart(2,"0"); }
+
+function pickOne(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+function makeCombo(){
+  var a = pickOne(POOL.audience);
+  var s = pickOne(POOL.scene);
+  var g = pickOne(POOL.angle);
+  return {
+    text: "给" + a + "，写一篇关于" + s + "的" + g,
+    factors: [["人群",a],["场景",s],["角度",g]]
+  };
+}
+
+// ---- 渲染：统计 ----
+function renderStats(){
+  document.getElementById("st-combo").textContent = state.combo;
+  document.getElementById("st-cat").textContent = CATS.length;
+  document.getElementById("st-entry").textContent = POOL.audience.length + POOL.scene.length + POOL.angle.length;
+  document.getElementById("st-wall").textContent = DEMO_CARDS.length + USER_CARDS.length + SAVED_IDEAS.length;
+  document.querySelector(".stat .badge").textContent = "示例 " + DEMO_CARDS.length + " · 已录入 " + USER_CARDS.length + " · 灵感 " + SAVED_IDEAS.length;
+  updateWallCount();
+}
+
+// ---- 渲染：筛选标签 ----
+function renderFilters(){
+  var el = document.getElementById("filters");
+  var all = wallData();
+  function btn(cat, label, count){
+    var on = state.filter === cat;
+    return '<button class="filter' + (on ? " on" : "") + '" data-cat="' + cat + '" role="tab" aria-selected="' + (on ? "true" : "false") + '">' + label + ' <span class="cnt">' + count + '</span></button>';
+  }
+  var html = btn("全部", "全部", all.length);
+  CATS.forEach(function(c){
+    html += btn(c, c, all.filter(function(x){return x.cat === c;}).length);
+  });
+  el.innerHTML = html;
+}
+
+// ---- 渲染：卡片墙 ----
+function wallData(){
+  return SAVED_IDEAS.map(function(c){
+    return {idea:true, title:c.text, factors:c.factors, savedAt:c.savedAt};
+  }).concat(USER_CARDS.map(function(c){
+    return {demo:false, user:true, title:c.title, cat:c.cat, url:c.url, note:"我录入 · "+c.savedAt};
+  })).concat(DEMO_CARDS.map(function(c){
+    return {demo:true, title:c.title, cat:c.cat, factors:c.factors, url:c.url, note:"来源："+c.url.split("/")[2]+"（平台首页，非具体笔记）"};
+  }));
+}
+function renderWall(){
+  var el = document.getElementById("wall");
+  var all = wallData();
+  var list = state.filter === "全部" ? all : all.filter(function(x){return x.cat===state.filter;});
+  el.innerHTML = list.map(function(c){
+    if (c.idea){
+      var fts = c.factors.map(function(f){return '<span class="factor" style="color:#fff;border-color:#484848;background:#242424;padding:4px 11px;font-size:12px">' + f[0] + ' · ' + f[1] + '</span>';}).join("");
+      return '<article class="card">' +
+        '<div class="tag-row"><span class="idea">词库灵感</span></div>' +
+        '<h3>' + esc(c.title) + '</h3>' +
+        (fts ? '<div class="tag-row">' + fts + '</div>' : "") +
+        '<span class="meta">词库组合灵感 · 收藏于 ' + esc(c.savedAt) + '（暂无真实对标链接）</span>' +
+        '<button class="unfav-btn" data-idea="' + esc(c.title) + '">取消收藏</button>' +
+        '</article>';
+    }
+    var tag = c.demo ? '<span class="demo">示例</span>' : '<span class="user">已录入</span>';
+    var factors = c.demo ? c.factors.map(function(f){return '<span class="factor" style="color:#fff;border-color:#484848;background:#242424;padding:4px 11px;font-size:12px">' + f + '</span>';}).join("") : "";
+    var linkLabel = c.demo ? "打开平台" : "查看对标";
+    return '<article class="card">' +
+      '<div class="tag-row"><span class="cat">' + esc(c.cat) + '</span>' + tag + '</div>' +
+      '<h3>' + esc(c.title) + '</h3>' +
+      (factors ? '<div class="tag-row">' + factors + '</div>' : "") +
+      '<span class="meta">' + esc(c.note) + '</span>' +
+      '<a class="link-btn" href="' + esc(c.url) + '" target="_blank" rel="noopener">' + linkLabel + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>' +
+      '</article>';
+  }).join("");
+  updateWallCount();
+}
+
+function updateWallCount(){
+  var all = wallData();
+  var shown = state.filter === "全部" ? all.length : all.filter(function(x){return x.cat===state.filter;}).length;
+  document.getElementById("wall-count").textContent = shown + " / " + all.length + " 张 · 示例 " + DEMO_CARDS.length + " · 已录入 " + USER_CARDS.length + " · 灵感 " + SAVED_IDEAS.length;
+}
+
+// ---- 核心交互：抽卡（洗牌动效 → 落定） ----
+var drawing = false;
+function draw(){
+  if (drawing) return;
+  drawing = true;
+  var card = document.getElementById("draw-card");
+  var text = document.getElementById("draw-text");
+  var factors = document.getElementById("draw-factors");
+  var btn = document.getElementById("redraw");
+
+  btn.classList.remove("spin");
+  void btn.offsetWidth;
+  btn.classList.add("spin");
+  state.drawNo++;
+  document.getElementById("draw-count").textContent = fmt(state.drawNo);
+
+  var steps = 6, i = 0;
+  var timer = setInterval(function(){
+    i++;
+    var combo = makeCombo();
+    text.textContent = combo.text;
+    factors.innerHTML = combo.factors.map(function(f){
+      return '<span class="factor"><b>' + f[0] + '</b>' + f[1] + '</span>';
+    }).join("");
+    if (i >= steps){
+      clearInterval(timer);
+      state.current = combo;
+      text.classList.remove("dim");
+      updateSaveBtn();
+      drawing = false;
+    } else {
+      text.classList.add("dim");
+    }
+  }, 90);
+}
+
+function toast(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._h);
+  toast._h = setTimeout(function(){ t.classList.remove("show"); }, 2600);
+}
+
+// ---- 事件绑定 ----
+document.getElementById("redraw").addEventListener("click", draw);
+function currentIdea(){
+  return state.current ? {text: state.current.text, factors: state.current.factors} : null;
+}
+function isSavedIdea(){
+  var c = currentIdea();
+  return c ? SAVED_IDEAS.some(function(x){ return x.text === c.text; }) : false;
+}
+function updateSaveBtn(){
+  var b = document.getElementById("save-btn");
+  var on = isSavedIdea();
+  b.classList.toggle("saved", on);
+  b.innerHTML = on
+    ? '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9z"/></svg>已收藏 · 点此取消'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9z"/></svg>收藏这签';
+}
+function toggleSaveIdea(){
+  var c = currentIdea();
+  if (!c){ toast("先抽一张再收藏吧"); return; }
+  if (isSavedIdea()){
+    SAVED_IDEAS = SAVED_IDEAS.filter(function(x){ return x.text !== c.text; });
+    saveIdeas();
+    updateSaveBtn();
+    renderStats(); renderFilters(); renderWall();
+    toast("已取消收藏");
+  } else {
+    SAVED_IDEAS.unshift({
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      text: c.text,
+      factors: c.factors,
+      savedAt: new Date().toLocaleDateString("zh-CN")
+    });
+    saveIdeas();
+    updateSaveBtn();
+    renderStats(); renderFilters(); renderWall();
+    toast("已收藏：词库灵感已加入卡片墙");
+  }
+}
+document.getElementById("save-btn").addEventListener("click", toggleSaveIdea);
+document.getElementById("wall").addEventListener("click", function(e){
+  var b = e.target && e.target.closest ? e.target.closest(".unfav-btn") : null;
+  if (!b) return;
+  var t = b.getAttribute("data-idea");
+  SAVED_IDEAS = SAVED_IDEAS.filter(function(x){ return x.text !== t; });
+  saveIdeas();
+  updateSaveBtn();
+  renderStats(); renderFilters(); renderWall();
+  toast("已取消收藏");
+});
+function validateAndAdd(){
+  var t = document.getElementById("in-title").value.trim();
+  var u = document.getElementById("in-url").value.trim();
+  var c = document.getElementById("in-cat").value;
+  if (!t){ toast("请填写标题后再保存"); return; }
+  if (!u){ toast("请粘贴链接后再保存"); return; }
+  if (!/^https?:\/\//i.test(u)){
+    toast("链接必须以 http:// 或 https:// 开头，请检查后重试");
+    return;
+  }
+  var parsed = null;
+  try { parsed = new URL(u); } catch(e){}
+  if (!parsed || (parsed.protocol !== "http:" && parsed.protocol !== "https:")){
+    toast("链接格式无效，请粘贴完整的网址");
+    return;
+  }
+  var dup = USER_CARDS.some(function(x){ return x.title === t && x.url === u; });
+  if (dup){ toast("这条已经录入过了，无需重复添加"); return; }
+  USER_CARDS.unshift({
+    id: Date.now().toString(36),
+    title: t,
+    url: u,
+    cat: c,
+    savedAt: new Date().toLocaleDateString("zh-CN")
+  });
+  saveAll();
+  document.getElementById("in-title").value = "";
+  document.getElementById("in-url").value = "";
+  toast("已保存到卡片墙，刷新页面仍在");
+  renderStats(); renderFilters(); renderWall();
+}
+document.getElementById("add-btn").addEventListener("click", validateAndAdd);
+document.getElementById("filters").addEventListener("click", function(e){
+  var b = e.target.closest(".filter");
+  if (!b) return;
+  state.filter = b.getAttribute("data-cat");
+  document.querySelectorAll(".filter").forEach(function(x){
+    x.classList.toggle("on", x === b);
+    x.setAttribute("aria-selected", x === b ? "true" : "false");
+  });
+  renderWall();
+});
+document.addEventListener("keydown", function(e){
+  if (e.code === "Space" && !/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName)){
+    e.preventDefault();
+    draw();
+  }
+});
+
+// ---- 初始化 ----
+renderStats();
+renderFilters();
+renderWall();
+updateSaveBtn();
+document.getElementById("draw-count").textContent = fmt(state.drawNo);
+</script>
+</body>
+</html>
